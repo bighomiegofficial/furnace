@@ -173,16 +173,12 @@ const char* insTypes[DIV_INS_MAX+1][3]={
   {"K053260",ICON_FA_BAR_CHART,ICON_FUR_INS_K053260},
   {"SCSP",ICON_FA_QUESTION,ICON_FUR_INS_SCSP},
   {"TED",ICON_FA_BAR_CHART,ICON_FUR_INS_TED},
-  {"C140",ICON_FA_VOLUME_UP,ICON_FUR_INS_C140},
+   {"C140",ICON_FA_VOLUME_UP,ICON_FUR_INS_C140},
   {"C219",ICON_FA_VOLUME_UP,ICON_FUR_INS_C219},
-  {NULL,ICON_FA_QUESTION,ICON_FA_QUESTION}
-};
-
-const char* sampleLoopModes[DIV_SAMPLE_LOOP_MAX]={
-  "Forward",
-  "Backward",
-  "Ping pong"
-};
+>>>>>>>+master
+sampleLo  {"C140/C219",ICON_FA_VOLUME_UP,ICON_FUR_INS_C140},
+>>>>>>>-origin/c219
+;
 
 const char* sampleDepths[DIV_SAMPLE_DEPTH_MAX]={
   "1-bit PCM",

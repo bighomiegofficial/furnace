@@ -357,25 +357,10 @@ void FurnaceGUI::drawSampleEdit() {
             }
             break;
           case DIV_SYSTEM_C219:
-            if (sample->loop) {
-              if (sample->loopStart&1) {
-                SAMPLE_WARN(warnLoopStart,"C219: loop start must be a multiple of 2");
-              }
-              if (sample->loopEnd&1) {
-                SAMPLE_WARN(warnLoopEnd,"C219: loop end must be a multiple of 2");
-              }
-            }
-            if (sample->samples>131072) {
-              SAMPLE_WARN(warnLength,"C219: maximum sample length is 131072");
-            }
-            if (dispatch!=NULL) {
-              MAX_RATE("C219",dispatch->rate);
+            if (sample->samples>131071) {
+              SAMPLE_WARN(warnLength,"C219: maximum sample length is 131071");
             }
             break;
-          case DIV_SYSTEM_MSM6295:
-            if (sample->loop) {
-              SAMPLE_WARN(warnLoop,"MSM6295: samples can't loop");
-            }
           default:
             break;
         }

@@ -17,18 +17,18 @@
  * 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
-#ifndef _C140_H
-#define _C140_H
+#ifndef _C219_H
+#define _C219_H
 
 #include "../dispatch.h"
 #include "sound/c140_c219.h"
 #include "../fixedQueue.h"
 
-class DivPlatformC140: public DivDispatch {
+class DivPlatformC219: public DivDispatch {
   struct Channel: public SharedChannel<int> {
     unsigned int audPos;
     int sample, wave;
-    bool setPos, invert, surround, noise, volChangedL, volChangedR, writeCtrl;
+    bool setPos, volChangedL, volChangedR, noise, invLout, invSign;
     int chPanL, chPanR;
     int chVolL, chVolR;
     int macroVolMul;
@@ -39,12 +39,11 @@ class DivPlatformC140: public DivDispatch {
       sample(-1),
       wave(-1),
       setPos(false),
-      invert(false),
-      surround(false),
-      noise(false),
       volChangedL(false),
       volChangedR(false),
-      writeCtrl(false),
+      noise(false),
+      invLout(false),
+      invSign(false),
       chPanL(255),
       chPanR(255),
       chVolL(255),
@@ -52,16 +51,13 @@ class DivPlatformC140: public DivDispatch {
       macroVolMul(64),
       macroPanMul(127) {}
   };
-  Channel chan[24];
-  DivDispatchOscBuffer* oscBuf[24];
-  bool isMuted[24];
+  Channel chan[16];
+  DivDispatchOscBuffer* oscBuf[16];
+  bool isMuted[16];
   unsigned int sampleOff[256];
   bool sampleLoaded[256];
-  bool is219;
-  int totalChans;
-  unsigned char groupBank[4];
 
-  unsigned char* sampleMem;
+  signed char* sampleMem;
   size_t sampleMemLen;
   struct QueuedWrite {
     unsigned short addr;
@@ -71,14 +67,10 @@ class DivPlatformC140: public DivDispatch {
     QueuedWrite(unsigned short a, unsigned char v): addr(a), val(v), addrOrVal(false) {}
   };
   FixedQueue<QueuedWrite,2048> writes;
-  struct c140_t c140;
   struct c219_t c219;
   unsigned char regPool[512];
   friend void putDispatchChip(void*,int);
   friend void putDispatchChan(void*,int,int);
-
-  void acquire_219(short** buf, size_t len);
-  void acquire_140(short** buf, size_t len);
 
   public:
     void acquire(short** buf, size_t len);
@@ -106,9 +98,6 @@ class DivPlatformC140: public DivDispatch {
     size_t getSampleMemUsage(int index = 0);
     bool isSampleLoaded(int index, int sample);
     void renderSamples(int chipID);
-    int getClockRangeMin();
-    int getClockRangeMax();
-    void set219(bool is_219);
     void setFlags(const DivConfig& flags);
     int init(DivEngine* parent, int channels, int sugRate, const DivConfig& flags);
     void quit();

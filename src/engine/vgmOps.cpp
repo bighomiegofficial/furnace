@@ -1087,6 +1087,11 @@ void DivEngine::performVGMWrite(SafeWriter* w, DivSystem sys, DivRegWrite& write
       w->writeS_BE(baseAddr2S|(write.addr&0x1ff));
       w->writeC(write.val&0xff);
       break;
+    case DIV_SYSTEM_C219:
+      w->writeC(0xd4);
+      w->writeS_BE(baseAddr2S|(write.addr&0x1ff));
+      w->writeC(write.val&0xff);
+      break;
     default:
       logW("write not handled!");
       break;
@@ -1858,6 +1863,22 @@ SafeWriter* DivEngine::saveVGM(bool* sysToExport, bool loop, int version, bool p
           writeC219[1]=disCont[i].dispatch;
           hasC140|=0x40000000;
           c140Type=2;
+          howManyChips++;
+        }
+        break;
+      case DIV_SYSTEM_C219:
+        if (!hasNamco) {
+          // ?!?!?!
+          hasNamco=disCont[i].dispatch->rate;
+          CHIP_VOL(40,1.0);
+          willExport[i]=true;
+          writeC140[0]=disCont[i].dispatch;
+        } else if (!(hasNamco&0x40000000)) {
+          isSecond[i]=true;
+          CHIP_VOL_SECOND(40,1.0);
+          willExport[i]=true;
+          writeC140[1]=disCont[i].dispatch;
+          hasNamco|=0x40000000;
           howManyChips++;
         }
         break;
